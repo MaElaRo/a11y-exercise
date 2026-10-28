@@ -109,6 +109,15 @@
   .units dd { margin: 0; font-size: 0.85rem; color: var(--muted); }
 
   .section { display: flex; flex-direction: column; gap: 10px; }
+  .rearranged { display: flex; flex-wrap: wrap; gap: 12px; }
+  .equation {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 22px;
+    font-family: var(--display); font-weight: 800; font-size: 1.6rem;
+  }
+  .fraction { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.15; }
+  .fraction span:first-child { border-bottom: 3px solid currentColor; padding: 0 6px 2px; }
+  .fraction span:last-child { padding-top: 2px; }
 
   .quiz {
     background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
@@ -219,7 +228,11 @@
 
       <section class="section">
         <h2>Rearranging it</h2>
-        <p>To find the current, divide the voltage by the resistance: I = U ÷ R. A higher resistance at the same voltage means less current flows. To find the resistance, divide the voltage by the current: R = U ÷ I.</p>
+        <p>To find the current, divide the voltage by the resistance. To find the resistance, divide the voltage by the current. A higher resistance at the same voltage means less current flows.</p>
+        <div class="rearranged">
+          <div class="equation"><span>I</span><span>=</span><span class="fraction"><span>U</span><span>R</span></span></div>
+          <div class="equation"><span>R</span><span>=</span><span class="fraction"><span>U</span><span>I</span></span></div>
+        </div>
       </section>
 
       <section class="quiz" aria-labelledby="quiz-heading">

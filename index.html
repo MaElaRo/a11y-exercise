@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ohm's Law Lesson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+  /* Layout: desktop learning site. Full-width header, course outline sidebar beside a lesson article; stacks below 860px. */
+  :root {
+    --bg: #f3f5f2;
+    --surface: #ffffff;
+    --fg: #1b2420;
+    --muted: #55625b;
+    --line: #d9dfda;
+    --accent: #1f6f4a;
+    --accent-soft: #e3f0e8;
+    --select: #2c5fd6;
+    --right: #2f9e5b;
+    --wrong: #d0473a;
+    --toast: #1b2420;
+    --toast-fg: #f3f5f2;
+    --display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+    --body: "Atkinson Hyperlegible", system-ui, -apple-system, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121815; --surface: #1b231f; --fg: #e8eee9; --muted: #a3b0a8; --line: #2e3a34;
+      --accent: #6fd09c; --accent-soft: #1f3329; --select: #7ea2ff; --right: #4fc27e; --wrong: #ff7a6b;
+      --toast: #e8eee9; --toast-fg: #121815; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121815; --surface: #1b231f; --fg: #e8eee9; --muted: #a3b0a8; --line: #2e3a34;
+    --accent: #6fd09c; --accent-soft: #1f3329; --select: #7ea2ff; --right: #4fc27e; --wrong: #ff7a6b;
+    --toast: #e8eee9; --toast-fg: #121815; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font-family: var(--body); font-size: 1rem; line-height: 1.6;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+    z-index: 10; background: var(--surface);
+  }
+  a { color: inherit; }
+  .wrap {
+    max-width: 1180px; margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  .site-header {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+    background: var(--surface); border-bottom: 1px solid var(--line);
+  }
+  .header-inner { height: 64px; display: flex; align-items: center; gap: 32px; }
+  .brand { font-family: var(--display); font-weight: 800; font-size: 1.3rem; text-decoration: none; letter-spacing: -.01em; }
+  .brand span { color: var(--accent); }
+  .site-nav { display: flex; gap: 24px; flex: 1; min-width: 0; }
+  .site-nav a { text-decoration: none; color: var(--muted); font-weight: 700; font-size: 0.95rem; }
+  .site-nav a[aria-current="page"] { color: var(--fg); }
+  .header-tools { display: flex; align-items: center; gap: 14px; }
+  .icon { width: 22px; height: 22px; display: grid; place-items: center; color: var(--fg); cursor: pointer; }
+  .icon svg { width: 20px; height: 20px; }
+  .icon.on svg path { fill: var(--accent); stroke: var(--accent); }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+
+  .layout {
+    display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 48px;
+    padding-block: 40px 120px; align-items: start;
+  }
+  .outline {
+    position: sticky; top: calc(64px + 24px + env(safe-area-inset-top, 0px));
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .outline h2 { font-size: 1rem; }
+  .progress-label { font-size: 0.85rem; color: var(--muted); display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
+  .progress { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .progress span { display: block; height: 100%; width: 66%; background: var(--accent); transition: width .4s; }
+  .outline ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .outline li a { display: flex; gap: 10px; padding: 8px 10px; border-radius: 8px; text-decoration: none; font-size: 0.95rem; }
+  .outline li a[aria-current="page"] { background: var(--accent-soft); font-weight: 700; }
+  .outline .num { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  article { display: flex; flex-direction: column; gap: 32px; max-width: 760px; }
+  .eyebrow { font-size: 0.78rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0 0 6px; }
+  h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 800; line-height: 1.08; }
+  h2 { font-size: 1.35rem; font-weight: 600; line-height: 1.25; }
+  p { margin: 0; max-width: 65ch; }
+  .intro { display: flex; flex-direction: column; gap: 12px; }
+  .lede { color: var(--muted); font-size: 1.1rem; }
+
+  .formula {
+    background: var(--accent-soft); border-radius: 14px; padding: 24px;
+    display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px 32px; align-items: center;
+  }
+  .formula h2 { grid-column: 1 / -1; }
+  .formula-main { font-family: var(--display); font-size: 2.6rem; font-weight: 800; letter-spacing: .02em; white-space: nowrap; }
+  .units { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; }
+  .units div { background: var(--surface); border-radius: 10px; padding: 10px 12px; }
+  .units dt { font-family: var(--display); font-weight: 800; font-size: 1.2rem; }
+  .units dd { margin: 0; font-size: 0.85rem; color: var(--muted); }
+
+  .section { display: flex; flex-direction: column; gap: 10px; }
+
+  .quiz {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 28px; display: flex; flex-direction: column; gap: 18px;
+  }
+  .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .option {
+    border: 2px solid var(--line); border-radius: 12px; padding: 14px 16px;
+    font-weight: 700; font-variant-numeric: tabular-nums; cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .option:hover { border-color: var(--muted); }
+  .option.selected { border-color: var(--select); }
+  .option.right { border-color: var(--right); background: color-mix(in srgb, var(--right) 14%, transparent); }
+  .option.wrong { border-color: var(--wrong); background: color-mix(in srgb, var(--wrong) 14%, transparent); }
+  .check {
+    align-self: flex-start; min-height: 44px; padding: 0 28px; border: 0; border-radius: 10px;
+    background: var(--accent); color: var(--surface); font: 700 1rem var(--body); cursor: pointer;
+  }
+  .check:disabled { opacity: .45; cursor: default; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--select); outline-offset: 2px; }
+
+  .toast {
+    position: fixed; z-index: 20;
+    right: max(24px, calc(24px + env(safe-area-inset-right, 0px)));
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+    width: min(380px, calc(100% - 32px));
+    transform: translateY(calc(100% + 40px)); transition: transform .35s ease;
+  }
+  .toast.show { transform: translateY(0); }
+  .toast-inner {
+    background: var(--toast); color: var(--toast-fg);
+    border-radius: 14px; padding: 16px 18px; display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 10px 30px rgb(0 0 0 / .25);
+  }
+  .toast-text { flex: 1; min-width: 0; }
+  .toast-text strong { display: block; font-family: var(--display); font-size: 1.1rem; }
+  .toast-go { font-weight: 700; padding: 8px 4px; cursor: pointer; text-decoration: underline; }
+
+  .reset { align-self: flex-start; background: none; border: 0; color: var(--muted); font: 400 0.85rem var(--body); text-decoration: underline; cursor: pointer; padding: 8px 0; }
+
+  @media (max-width: 860px) {
+    .site-nav { display: none; }
+    .header-inner { justify-content: space-between; }
+    .layout { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 24px 120px; }
+    .outline { position: static; }
+    .formula { grid-template-columns: minmax(0, 1fr); }
+    .options { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) { .toast, .progress span, .option { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="#top">Werk<span>stoff</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="#top" aria-current="page">Courses</a>
+      <a href="#top">Practice</a>
+      <a href="#top">Exam prep</a>
+      <a href="#top">Community</a>
+    </nav>
+    <div class="header-tools">
+      <div class="icon" id="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      </div>
+      <div class="icon" id="bookmark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+      </div>
+      <div class="icon" id="notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg>
+      </div>
+      <div class="avatar" id="account">LK</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap layout" id="top">
+  <aside class="outline" aria-labelledby="outline-heading">
+    <h2 id="outline-heading">Electrical basics</h2>
+    <div class="progress-label"><span>Course progress</span><span id="progress-text">2 of 3</span></div>
+    <div class="progress"><span id="progress"></span></div>
+    <ol>
+      <li><a href="#top"><span class="num">1</span> Voltage and current</a></li>
+      <li><a href="#top"><span class="num">2</span> Resistance</a></li>
+      <li><a href="#top" aria-current="page"><span class="num">3</span> Ohm's law</a></li>
+    </ol>
+  </aside>
+
+  <main>
+    <article>
+      <section class="intro">
+        <p class="eyebrow">Electronics technician · Year 1 · Lesson 3</p>
+        <h1>Ohm's law</h1>
+        <p class="lede">Voltage, current and resistance are linked. If you know two of them, you can calculate the third.</p>
+      </section>
+
+      <section class="formula" aria-labelledby="formula-heading">
+        <h2 id="formula-heading">The formula</h2>
+        <div class="formula-main">U = R · I</div>
+        <dl class="units">
+          <div><dt>U</dt><dd>Voltage in volts (V)</dd></div>
+          <div><dt>R</dt><dd>Resistance in ohms (Ω)</dd></div>
+          <div><dt>I</dt><dd>Current in amperes (A)</dd></div>
+        </dl>
+      </section>
+
+      <section class="section">
+        <h2>Rearranging it</h2>
+        <p>To find the current, divide the voltage by the resistance: I = U ÷ R. A higher resistance at the same voltage means less current flows. To find the resistance, divide the voltage by the current: R = U ÷ I.</p>
+      </section>
+
+      <section class="quiz" aria-labelledby="quiz-heading">
+        <p class="eyebrow">Check your understanding</p>
+        <h2 id="quiz-heading">A heating element has a resistance of 23 Ω and is connected to 230 V. What current flows?</h2>
+        <div class="options" id="options">
+          <div class="option" data-correct="false">0.1 A</div>
+          <div class="option" data-correct="true">10 A</div>
+          <div class="option" data-correct="false">253 A</div>
+          <div class="option" data-correct="false">5,290 A</div>
+        </div>
+        <button class="check" id="check" type="button" disabled>Check answer</button>
+      </section>
+
+      <button class="reset" id="reset" type="button">Restart lesson</button>
+    </article>
+  </main>
+</div>
+
+<div class="toast" id="toast">
+  <div class="toast-inner">
+    <div class="toast-text">
+      <strong>Lesson complete</strong>
+      +20 XP · 3 of 3 lessons done
+    </div>
+    <div class="toast-go" id="toast-go">Continue</div>
+  </div>
+</div>
+
+<script>
+
+  const options = [...document.querySelectorAll(".option")];
+  const check = document.getElementById("check");
+  const toast = document.getElementById("toast");
+  const progress = document.getElementById("progress");
+  const progressText = document.getElementById("progress-text");
+  let selected = null;
+  let answered = false;
+  let toastTimer = null;
+
+  for (const option of options) {
+    option.addEventListener("click", () => {
+      if (answered) return;
+      options.forEach((o) => o.classList.remove("selected"));
+      option.classList.add("selected");
+      selected = option;
+      check.disabled = false;
+    });
+  }
+
+  check.addEventListener("click", () => {
+    if (!selected || answered) return;
+    answered = true;
+    check.disabled = true;
+    for (const option of options) {
+      option.classList.remove("selected");
+      if (option.dataset.correct === "true") {
+        option.classList.add("right");
+      } else if (option === selected) {
+        option.classList.add("wrong");
+      }
+    }
+    progress.style.width = "100%";
+    progressText.textContent = "3 of 3";
+    setTimeout(() => {
+      toast.classList.add("show");
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 5000);
+    }, 600);
+  });
+
+  document.getElementById("bookmark").addEventListener("click", (event) => {
+    event.currentTarget.classList.toggle("on");
+  });
+
+  document.getElementById("toast-go").addEventListener("click", () => {
+    toast.classList.remove("show");
+  });
+
+  document.getElementById("reset").addEventListener("click", () => {
+    clearTimeout(toastTimer);
+    toast.classList.remove("show");
+    answered = false;
+    selected = null;
+    check.disabled = true;
+    progress.style.width = "66%";
+    progressText.textContent = "2 of 3";
+    options.forEach((o) => o.classList.remove("selected", "right", "wrong"));
+    window.scrollTo({ top: 0 });
+  });
+</script>
+</body>
+</html>

@@ -69,7 +69,6 @@
   .site-nav { display: flex; gap: 24px; flex: 1; min-width: 0; }
   .site-nav a { text-decoration: none; color: var(--muted); font-weight: 700; font-size: 0.95rem; }
   .site-nav a[aria-current="page"] { color: var(--fg); }
-  .menu-button { display: none; min-height: 44px; padding: 0 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--fg); font: 700 0.95rem var(--body); cursor: pointer; }
   .header-tools { display: flex; align-items: center; gap: 14px; }
   .icon { width: 22px; height: 22px; display: grid; place-items: center; color: var(--fg); cursor: pointer; }
   .icon svg { width: 20px; height: 20px; }
@@ -171,12 +170,9 @@
   .reset { align-self: flex-start; background: none; border: 0; color: var(--muted); font: 400 0.85rem var(--body); text-decoration: underline; cursor: pointer; padding: 8px 0; }
 
   @media (max-width: 860px) {
-    .site-nav { display: none; }
-    .site-nav.open { display: flex; flex-direction: column; gap: 4px; position: absolute; top: 100%; left: 0; right: 0; background: var(--surface); border-bottom: 1px solid var(--line); padding: 8px max(16px, env(safe-area-inset-right, 0px)) 12px max(16px, env(safe-area-inset-left, 0px)); }
-    .site-nav.open a { padding: 10px 0; }
-    .menu-button { display: block; order: -1; }
     .layout > main, .outline { grid-column: auto; grid-row: auto; }
-    .header-inner { justify-content: space-between; }
+    .header-inner { height: auto; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 12px; }
+    .site-nav { order: 3; flex-basis: 100%; flex-wrap: wrap; gap: 8px 20px; }
     .layout { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 24px 120px; }
     .outline { position: static; }
     .formula { grid-template-columns: minmax(0, 1fr); }
@@ -192,8 +188,7 @@
 <header class="site-header">
   <div class="wrap header-inner">
     <a class="brand" href="#top" aria-label="Werkstoff"><span aria-hidden="true">Werk<span>stoff</span></span></a>
-    <button class="menu-button" id="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
-    <nav class="site-nav" id="site-nav" aria-label="Main">
+    <nav class="site-nav" aria-label="Main">
       <a href="#top" aria-current="page">Courses</a>
       <a href="#top">Practice</a>
       <a href="#top">Exam prep</a>
@@ -293,8 +288,6 @@
   const lessonStatus = document.getElementById("lesson-status");
   const hint = document.getElementById("hint");
   const explanation = document.getElementById("explanation");
-  const menuButton = document.getElementById("menu-button");
-  const siteNav = document.getElementById("site-nav");
 
   function setProgress(done) {
     progress.style.width = done === 3 ? "100%" : "66%";
@@ -304,11 +297,6 @@
     lessonStatus.hidden = done !== 3;
   }
 
-  menuButton.addEventListener("click", () => {
-    const open = menuButton.getAttribute("aria-expanded") !== "true";
-    menuButton.setAttribute("aria-expanded", String(open));
-    siteNav.classList.toggle("open", open);
-  });
   let selected = null;
   let answered = false;
   let toastTimer = null;
